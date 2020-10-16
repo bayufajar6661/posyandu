@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use DateTime;
 use App\Exports\BabyExport;
 use Maatwebsite\Excel\Facades\Excel;
-// use Illuminate\Foundation\Console\Presets\React;
 
 class BabiesController extends Controller
 {
@@ -37,9 +36,6 @@ class BabiesController extends Controller
             $berat_bayi = $baby->berat_bayi;
         }else{
             $progress = $progress;
-            // $detail = DB::table('progress_babies')->select('panjang_bayi', 'berat_bayi')->where('id_bayi', $baby->id)->where('bulan_ke', max($bulan))->get();
-            // $panjang_bayi = $detail[0]->panjang_bayi;
-            // $berat_bayi = $detail[0]->berat_bayi;
         }
         $dataProgress = $this->chartProgress($progress, $baby, $bulan);
         $session = $request->session()->get('role');
@@ -198,7 +194,6 @@ class BabiesController extends Controller
     public function index(Request $request)
     {
         $role = $request->session()->get('role');
-        // dd($role);
         $babies = Baby::all();
         if($role === 'Admin' && $role !== 'Staff' && $role !== 'Staff2'){
             return redirect('/home');
@@ -259,13 +254,7 @@ class BabiesController extends Controller
             (int)substr($request->tanggal_lahir, 8, 2), // tanggal
             (int)substr($request->tanggal_lahir, 0, 4) // tahun
         );
-        // $baby = new Baby;
-        // $baby->nama = $request->nama;
-        // $baby->nama_ibu = $request->nama_ibu;
-        // $baby->nama_ayah = $request->nama_ayah;
-        // $baby->save();
-
-
+        
         Baby::create([
             'nama' => $request->nama,
             'nama_ibu' => $request->nama_ibu,
@@ -281,9 +270,7 @@ class BabiesController extends Controller
             'panjang_bayi' => $request->panjang_bayi,
             'berat_bayi' => $request->berat_bayi
         ]);
-
-        // otomatis mengisi yang di fillable tanpa inisialisasi satu per satu
-        // Baby::create($request->all());
+        
         return redirect('/baby')->with('status', "Data '" . $request->nama . "' berhasil ditambahkan");
     }
 
@@ -313,8 +300,6 @@ class BabiesController extends Controller
             $panjang_bayi = $detail[0]->panjang_bayi;
             $berat_bayi = $detail[0]->berat_bayi;
         }
-        // $this->status($baby->jenis_kelamin, $baby->tanggal_lahir);
-        // $this->hitungIdeal(date('Y-m-d', $baby->tanggal_lahir), $baby);
         $umur = $this->hitung_umur(date('Y-m-d', $baby->tanggal_lahir));
         $jk = $baby->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan';
         $data = [
@@ -330,14 +315,6 @@ class BabiesController extends Controller
     function status($jk, $tanggal_lahir){
         $bulan = (date('Y')-date('Y', $tanggal_lahir))*12;
         $bulan += date('m')-date('m', $tanggal_lahir);
-        switch($jk){
-            case 1:
-                // dd($bulan);
-            break;
-            case 2:
-                // dd($bulan);
-            break;
-        }
     }
 
     function hitung_umur($tanggal_lahir){
@@ -405,7 +382,6 @@ class BabiesController extends Controller
             case 2: $perempuan = 'checked';
                 break;
         }
-        // dd($baby->golongan_darah);
         $a = '';$b = '';$ab = '';$o = '';$bt = '';
         switch($baby->golongan_darah){
             case "A": $a = 'selected';
